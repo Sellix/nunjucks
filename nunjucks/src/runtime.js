@@ -233,6 +233,11 @@ function memberLookup(obj, val) {
   }
 
   if (typeof obj[val] === 'function') {
+    if ((!Object.hasOwn(obj, val) && !Object.hasOwn(Object.getPrototypeOf(obj), val)) ||
+        val === 'constructor' ||
+        obj[val] === Object.getPrototypeOf(obj)) {
+      return undefined;
+    }
     return (...args) => obj[val].apply(obj, args);
   }
 

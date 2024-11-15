@@ -37,7 +37,7 @@ function joiner(sep) {
 // each time it's called. That way, if something like an environment
 // uses it, they will each have their own copy.
 function globals() {
-  return {
+  return Object.create(null) /*{
     range(start, stop, step) {
       if (typeof stop === 'undefined') {
         stop = start;
@@ -67,7 +67,7 @@ function globals() {
     joiner(sep) {
       return joiner(sep);
     }
-  };
+  };*/
 }
 
 module.exports = globals;

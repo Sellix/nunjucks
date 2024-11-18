@@ -207,7 +207,13 @@ function markSafe(val) {
 }
 
 function suppressValue(val, autoescape) {
-  val = (val !== undefined && val !== null) ? val : '';
+  val = (
+    val !== undefined &&
+    val !== null &&
+    !(val instanceof Function)
+  ) ?
+    val :
+    '';
 
   if (autoescape && !(val instanceof SafeString)) {
     val = lib.escape(val.toString());
@@ -232,10 +238,16 @@ function memberLookup(obj, val) {
     return undefined;
   }
 
-  if (typeof obj[val] === 'function') {
-    if ((!Object.hasOwn(obj, val) && !Object.hasOwn(Object.getPrototypeOf(obj), val)) ||
-        val === 'constructor' ||
-        obj[val] === Object.getPrototypeOf(obj)) {
+  if (typeof obj === 'function' ||
+      obj instanceof Function
+  ) {
+    return undefined;
+  } else if (typeof obj[val] === 'function') {
+    if (
+      !(Object.hasOwn(obj, val) || Object.hasOwn(Object.getPrototypeOf(obj), val)) ||
+      obj[val] === Object.getPrototypeOf(obj) ||
+      obj[val] === obj.constructor
+    ) {
       return undefined;
     }
     return (...args) => obj[val].apply(obj, args);

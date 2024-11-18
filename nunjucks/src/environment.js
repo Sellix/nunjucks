@@ -143,7 +143,7 @@ class Environment extends EmitterObj {
   }
 
   addGlobal(name, value) {
-    this.globals[name] = value;
+    this.globals[name] = Object.freeze(value);
     return this;
   }
 
